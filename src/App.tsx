@@ -1,16 +1,29 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import { CartProvider } from "./context/CartContext";
+import { CartToggle } from "./components/Cart/CartToggle";
+import { DesktopCartPanel } from "./components/Cart/DesktopCartPanel";
+import { MobileCartDrawer } from "./components/Cart/MobileCartDrawer";
+import Marketplace from "./pages/Marketplace";
+import Header from "./components/Header";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div
-      className={cn("min-h-screen w-full", spaceGrotesk.className)}
-      style={{ background: "#121212" }}
-    ></div>
+    <CartProvider>
+      <div className="app-container relative min-h-screen bg-gray-50">
+        <Header />
+        {/* Main marketplace */}
+        <Marketplace />
+
+        {/* Floating cart toggle button */}
+        <CartToggle />
+
+        {/* Desktop side cart */}
+        <DesktopCartPanel />
+
+        {/* Mobile drawer cart */}
+        <MobileCartDrawer />
+      </div>
+    </CartProvider>
   );
 }
 
