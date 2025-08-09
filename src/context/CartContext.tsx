@@ -6,7 +6,7 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import type { TemplateType } from "../data/template";
+import { Template, type TemplateType } from "../data/template";
 
 // Define the context shape
 interface CartContextType {
@@ -14,10 +14,11 @@ interface CartContextType {
   credits: number;
   purchased: string[];
   isCartOpen: boolean;
-  addToCart: (template: TemplateType) => void;
+  addToCart: (id: string) => void;
   removeFromCart: (name: string) => void;
   checkout: () => void;
   toggleCart: () => void;
+  openCart: () => void;
 }
 
 // Props for the provider
@@ -50,8 +51,9 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     localStorage.setItem("purchased", JSON.stringify(purchased));
   }, [credits, purchased]);
 
-  const addToCart = (template: TemplateType) => {
-    if (!cart.find((item) => item.name === template.name)) {
+  const addToCart = (id: string) => {
+    const template = Template.find((t) => t.id === id);
+    if (template && !cart.find((item) => item.id === id)) {
       setCart((prev) => [...prev, template]);
     }
   };
@@ -73,6 +75,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   };
 
   const toggleCart = () => setIsCartOpen((prev) => !prev);
+  const openCart = () => setIsCartOpen(true);
 
   return (
     <CartContext.Provider
@@ -85,6 +88,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         removeFromCart,
         checkout,
         toggleCart,
+        openCart,
       }}
     >
       {children}

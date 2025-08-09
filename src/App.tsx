@@ -9,7 +9,7 @@ import Header from "./components/Header";
 function App() {
   return (
     <CartProvider>
-      <div className="app-container relative min-h-screen bg-gray-50">
+      <div className="relative min-h-screen bg-[#121212] ">
         <Header />
         {/* Main marketplace */}
         <Marketplace />
