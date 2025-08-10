@@ -20,7 +20,7 @@ function App() {
         <CartToggle count={cart.length} onClick={() => setIsCartOpen(true)} />
 
         {/* Desktop side cart */}
-        <DesktopCartPanel />
+        <DesktopCartPanel open={isCartOpen} setOpen={setIsCartOpen} />
 
         {/* Mobile drawer cart */}
         <MobileCartDrawer />

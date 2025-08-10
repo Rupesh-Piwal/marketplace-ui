@@ -10,7 +10,7 @@ export const DesktopCartPanel = ({ open, setOpen }: Props) => {
   const { cart, credits, removeFromCart, checkout } = useCart();
   const totalCost = cart.reduce((sum, t) => sum + t.cost, 0);
 
-  // If you want to use the open prop to conditionally render
+  // Use the open prop to conditionally render (not isCartOpen)
   if (!open) return null;
 
   return (
