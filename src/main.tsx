@@ -1,15 +1,20 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import { Toaster } from "react-hot-toast";
 
-// Font imports
-import "@fontsource/space-grotesk"; // Defaults to weight 400
-import "@fontsource/space-grotesk/700.css"; // Optional extra weight
+
+import "@fontsource/space-grotesk";
+import "@fontsource/space-grotesk/700.css"; 
 
 import App from "./App.tsx";
+import { CartProvider } from "./context/CartContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <CartProvider>
+      <App />
+      <Toaster position="top-right" reverseOrder={false} />
+    </CartProvider>
   </StrictMode>
 );

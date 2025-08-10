@@ -1,5 +1,5 @@
 import "./App.css";
-import { CartProvider, useCart } from "./context/CartContext";
+import { useCart } from "./context/CartContext";
 import { CartToggle } from "./components/Cart/CartToggle";
 import { DesktopCartPanel } from "./components/Cart/DesktopCartPanel";
 import { MobileCartDrawer } from "./components/Cart/MobileCartDrawer";
@@ -10,22 +10,20 @@ function App() {
   const { cart, isCartOpen, setIsCartOpen } = useCart();
 
   return (
-    <CartProvider>
-      <div className="relative min-h-screen bg-[#121212] ">
-        <Header />
-        {/* Main marketplace */}
-        <Marketplace />
+    <div className="relative min-h-screen bg-[#121212] ">
+      <Header />
+      {/* Main marketplace */}
+      <Marketplace />
 
-        {/* Floating cart toggle button */}
-        <CartToggle count={cart.length} onClick={() => setIsCartOpen(true)} />
+      {/* Floating cart toggle button */}
+      <CartToggle count={cart.length} onClick={() => setIsCartOpen(true)} />
 
-        {/* Desktop side cart */}
-        <DesktopCartPanel open={isCartOpen} setOpen={setIsCartOpen} />
+      {/* Desktop side cart */}
+      <DesktopCartPanel open={isCartOpen} setOpen={setIsCartOpen} />
 
-        {/* Mobile drawer cart */}
-        <MobileCartDrawer open={isCartOpen} setOpen={setIsCartOpen} />
-      </div>
-    </CartProvider>
+      {/* Mobile drawer cart */}
+      <MobileCartDrawer open={isCartOpen} setOpen={setIsCartOpen} />
+    </div>
   );
 }
 

@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+
 import {
   createContext,
   useContext,
@@ -7,8 +7,8 @@ import {
   type ReactNode,
 } from "react";
 import { Template, type TemplateType } from "../data/template";
+import toast from "react-hot-toast";
 
-// Define the context shape
 interface CartContextType {
   cart: TemplateType[];
   credits: number;
@@ -22,12 +22,10 @@ interface CartContextType {
   openCart: () => void;
 }
 
-// Props for the provider
 interface CartProviderProps {
   children: ReactNode;
 }
 
-// Create context with a default value
 export const CartContext = createContext<CartContextType | undefined>(
   undefined
 );
@@ -38,41 +36,94 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const [purchased, setPurchased] = useState<string[]>([]);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
-  // Load from localStorage
+  
   useEffect(() => {
     const savedCredits = localStorage.getItem("credits");
     const savedPurchased = localStorage.getItem("purchased");
-    if (savedCredits) setCredits(parseInt(savedCredits));
-    if (savedPurchased) setPurchased(JSON.parse(savedPurchased));
+    const savedCart = localStorage.getItem("cart");
+
+    if (savedCredits) {
+      setCredits(parseInt(savedCredits));
+    }
+
+    if (savedPurchased) {
+      setPurchased(JSON.parse(savedPurchased));
+    }
+
+    if (savedCart) {
+      try {
+        const cartIds = JSON.parse(savedCart) as string[];
+    
+        const reconstructedCart = cartIds
+          .map((id) => Template.find((t) => t.id === id))
+          .filter(
+            (template): template is TemplateType => template !== undefined
+          );
+
+        setCart(reconstructedCart);
+      } catch (error) {
+        console.warn("Failed to parse saved cart data:", error);
+        localStorage.removeItem("cart");
+      }
+    }
   }, []);
 
-  // Save to localStorage
+ 
   useEffect(() => {
     localStorage.setItem("credits", credits.toString());
+  }, [credits]);
+
+  useEffect(() => {
     localStorage.setItem("purchased", JSON.stringify(purchased));
-  }, [credits, purchased]);
+  }, [purchased]);
+
+ 
+  useEffect(() => {
+    const cartIds = cart.map((item) => item.id);
+    localStorage.setItem("cart", JSON.stringify(cartIds));
+  }, [cart]);
 
   const addToCart = (id: string) => {
     const template = Template.find((t) => t.id === id);
-    if (template && !cart.find((item) => item.id === id)) {
-      setCart((prev) => [...prev, template]);
+    if (!template) return;
+
+    if (purchased.includes(template.name)) {
+      toast.error("You already own this template.");
+      return;
     }
+
+    if (cart.some((item) => item.id === id)) {
+      // setIsCartOpen(true);
+      toast("This template is already in your cart.");
+      return;
+    }
+
+    setCart((prev) => [...prev, template]);
+    // setIsCartOpen(true);
+    toast.success("Template added to cart.");
   };
 
   const removeFromCart = (name: string) => {
     setCart((prev) => prev.filter((item) => item.name !== name));
+    toast("Template removed from cart.");
   };
 
   const checkout = () => {
     const totalCost = cart.reduce((sum, t) => sum + t.cost, 0);
+
+    if (cart.length === 0) return;
+
     if (totalCost > credits) {
-      alert("Insufficient credits");
+      toast.error("Not enough credits to complete this purchase.");
       return;
     }
-    setCredits((prev) => prev - totalCost);
+
+    const newCredits = credits - totalCost;
+    setCredits(newCredits);
     setPurchased((prev) => [...prev, ...cart.map((t) => t.name)]);
     setCart([]);
-    alert(`Purchase successful! Remaining credits: ${credits - totalCost}`);
+
+    toast.success(`Purchase successful! Remaining credits: ${newCredits}`);
   };
 
   const toggleCart = () => setIsCartOpen((prev) => !prev);

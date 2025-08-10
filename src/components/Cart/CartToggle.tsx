@@ -1,5 +1,11 @@
 import React from "react";
 import { useCart } from "../../context/CartContext";
+import { ShoppingCart } from "lucide-react";
+
+// Utility function for class name concatenation
+const cn = (...classes: (string | undefined | false)[]): string => {
+  return classes.filter(Boolean).join(" ");
+};
 
 // Two possible prop patterns
 interface PropsWithCount {
@@ -28,20 +34,22 @@ export const CartToggle = (props: Props) => {
 
     return (
       <button
-        onClick={onClick}
-        className={`fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105 hover:bg-blue-700 ${
-          count > 0 ? "animate-pulse" : ""
-        }`}
         aria-label="Open cart"
+        onClick={onClick}
+        className={cn(
+          "fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full border border-white/10",
+          "bg-white/[0.06] px-4 py-3 text-white backdrop-blur-xl transition-colors",
+          "hover:bg-white/[0.12] focus:outline-none focus:ring-2 focus:ring-white/30",
+          "shadow-[0_10px_30px_rgba(0,0,0,0.35),0_0_20px_rgba(255,42,95,0.2)]"
+        )}
       >
-        <span className="flex items-center gap-1">
-          🛒
-          {count > 0 && (
-            <span className="bg-white text-gray-800 text-xs rounded-full min-w-5 h-5 flex items-center justify-center font-bold">
-              {count}
-            </span>
-          )}
-        </span>
+        <ShoppingCart className="h-5 w-5" />
+        <span className="text-sm font-medium">Cart</span>
+        {count > 0 && (
+          <span className="ml-1 inline-flex min-w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#ff4d5a] to-[#ff2a5f] px-2 py-0.5 text-xs font-bold">
+            {count}
+          </span>
+        )}
       </button>
     );
   } else {
@@ -54,22 +62,22 @@ export const CartToggle = (props: Props) => {
 
     return (
       <button
-        onClick={handleToggle}
-        className={`fixed bottom-4 right-4 px-4 py-2 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105 ${
-          open
-            ? "bg-red-600 hover:bg-red-700 text-white"
-            : "bg-blue-600 hover:bg-blue-700 text-white"
-        } ${cart.length > 0 ? "animate-pulse" : ""}`}
         aria-label={open ? "Close cart" : "Open cart"}
+        onClick={handleToggle}
+        className={cn(
+          "fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full border border-white/10",
+          "bg-white/[0.06] px-4 py-3 text-white backdrop-blur-xl transition-colors",
+          "hover:bg-white/[0.12] focus:outline-none focus:ring-2 focus:ring-white/30",
+          "shadow-[0_10px_30px_rgba(0,0,0,0.35),0_0_20px_rgba(255,42,95,0.2)]"
+        )}
       >
-        <span className="flex items-center gap-1">
-          {open ? "✖" : "🛒"}
-          {cart.length > 0 && (
-            <span className="bg-white text-gray-800 text-xs rounded-full min-w-5 h-5 flex items-center justify-center font-bold">
-              {cart.length}
-            </span>
-          )}
-        </span>
+        <ShoppingCart className="h-5 w-5" />
+        <span className="text-sm font-medium">{open ? "Close" : "Cart"}</span>
+        {cart.length > 0 && (
+          <span className="ml-1 inline-flex min-w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#ff4d5a] to-[#ff2a5f] px-2 py-0.5 text-xs font-bold">
+            {cart.length}
+          </span>
+        )}
       </button>
     );
   }

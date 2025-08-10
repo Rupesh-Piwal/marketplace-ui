@@ -1,5 +1,10 @@
 import React from "react";
 import { useCart } from "../../context/CartContext";
+import { ShoppingCart, Trash2 } from "lucide-react";
+import { ScrollArea } from "../ui/scroll-area";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 
 interface Props {
   open: boolean;
@@ -7,99 +12,98 @@ interface Props {
 }
 
 export const MobileCartDrawer = ({ open, setOpen }: Props) => {
-  const { cart, credits, removeFromCart, checkout } = useCart();
+  const { cart, credits, removeFromCart, checkout, setIsCartOpen } = useCart();
   const totalCost = cart.reduce((sum, t) => sum + t.cost, 0);
+  const disabled = cart.length === 0 || totalCost > credits;
 
-  const handleClose = () => {
-    setOpen(false);
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (window.innerWidth < 768) {
+      setIsCartOpen(isOpen);
+      setOpen(isOpen);
+    } else {
+      
+      if (!isOpen) {
+        setIsCartOpen(false);
+        setOpen(false);
+      }
+    }
   };
 
   return (
-    <>
-      {/* Backdrop/Overlay */}
-      {open && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={handleClose}
-        />
-      )}
-
-      {/* Drawer */}
-      <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg p-4 transform transition-transform z-50 ${
-          open ? "translate-x-0" : "translate-x-full"
-        } md:hidden`}
+    <Sheet open={open} onOpenChange={handleOpenChange}>
+      <SheetContent
+        side="bottom"
+        className="h-[70vh] border-t border-white/10 bg-[#121212]/95 text-white backdrop-blur-xl"
       >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">Cart</h2>
-          <button
-            onClick={handleClose}
-            className="text-gray-500 hover:text-gray-700 text-xl"
-            aria-label="Close cart"
-          >
-            ✖
-          </button>
-        </div>
+        <SheetHeader>
+          <SheetTitle className="flex items-center gap-2">
+            <ShoppingCart className="h-5 w-5" />
+            Your Cart
+          </SheetTitle>
+        </SheetHeader>
 
-        <p className="mb-4 text-sm text-gray-600">
-          Credits:{" "}
-          <span className="font-semibold">{credits.toLocaleString()}</span>
-        </p>
-
-        <div className="flex-1 overflow-auto max-h-96">
-          {cart.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No items in cart</p>
-          ) : (
-            <div className="space-y-2">
+        <div className="mt-4 flex h-[calc(70vh-7rem)] flex-col">
+          <ScrollArea className="flex-1 rounded-md border border-white/10">
+            <div className="divide-y divide-white/10">
+              {cart.length === 0 && (
+                <div className="p-6 text-center text-sm text-white/60">
+                  Your cart is empty.
+                </div>
+              )}
               {cart.map((item) => (
                 <div
-                  key={item.name}
-                  className="flex justify-between items-center p-2 bg-gray-50 rounded"
+                  key={item.id}
+                  className="flex items-center justify-between px-4 py-3"
                 >
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-medium truncate block">
-                      {item.name}
-                    </span>
+                  <div>
+                    <div className="text-white">{item.name}</div>
+                    <div className="text-xs text-white/60">
+                      {item.cost === 0 ? "Free" : `${item.cost} credits`}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 ml-2">
-                    <span className="text-sm font-semibold">
-                      {item.cost} credits
-                    </span>
-                    <button
-                      onClick={() => removeFromCart(item.name)}
-                      className="text-red-500 hover:text-red-700 text-xs px-2 py-1 hover:bg-red-50 rounded"
-                    >
-                      Remove
-                    </button>
-                  </div>
+                  <button
+                    aria-label={`Remove ${item.name}`}
+                    onClick={() => removeFromCart(item.name)}
+                    className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-xs text-white/80 hover:bg-white/[0.08]"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Remove
+                  </button>
                 </div>
               ))}
             </div>
-          )}
-        </div>
+          </ScrollArea>
 
-        {cart.length > 0 && (
-          <div className="mt-4 pt-4 border-t">
-            <div className="flex justify-between items-center mb-3">
-              <span className="font-semibold">Total:</span>
-              <span className="font-bold text-lg">
-                {totalCost.toLocaleString()} credits
+          <div className="mt-4 space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-white/70">Total</span>
+              <span className="text-white font-semibold">
+                {totalCost} credits
               </span>
             </div>
-            <button
-              onClick={checkout}
-              disabled={totalCost > credits}
-              className={`w-full px-4 py-2 rounded font-medium transition-colors ${
-                totalCost > credits
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-green-600 text-white hover:bg-green-700"
-              }`}
+            <Button
+              disabled={disabled}
+              onClick={() => {
+                checkout();
+                setOpen(false);
+              }}
+              className={cn(
+                "w-full text-white",
+                disabled
+                  ? "bg-white/10 border-white/20"
+                  : "bg-gradient-to-r from-[#0fa36b] to-[#0f9d58] hover:from-[#13bf7d] hover:to-[#11aa60] shadow-[0_0_16px_rgba(19,191,125,0.35)]"
+              )}
             >
-              {totalCost > credits ? "Insufficient Credits" : "Checkout"}
-            </button>
+              Checkout
+            </Button>
+            <div className="text-xs text-white/60">
+              Available:{" "}
+              <span className="text-white font-medium">{credits}</span> credits
+            </div>
           </div>
-        )}
-      </div>
-    </>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };

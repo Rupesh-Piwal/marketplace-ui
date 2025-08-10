@@ -25,7 +25,7 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
         "transition-all duration-300 hover:shadow-[0_10px_40px_rgba(255,42,95,0.15)] hover:-translate-y-0.5"
       )}
     >
-      {/* Badges */}
+   
       <div className="absolute left-3 top-3 z-20 flex gap-2">
         {isPremium && (
           <Badge
@@ -45,9 +45,9 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
         )}
       </div>
 
-      {/* Preview */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/10 bg-black/40">
-        {/* Ambient glow */}
+      
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 flex justify-center items-center">
+      
         <div className="pointer-events-none absolute inset-0 opacity-60 transition-opacity duration-300 group-hover:opacity-80">
           <div className="absolute -inset-24 bg-[radial-gradient(400px_200px_at_30%_0%,rgba(255,42,95,0.12),transparent_60%),radial-gradient(400px_200px_at_80%_100%,rgba(255,106,0,0.1),transparent_60%)]" />
         </div>
@@ -55,7 +55,7 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
         <TemplatePreview type={template.preview} text={template.sampleText} />
       </div>
 
-      {/* Meta + CTAs */}
+    
       <div className="mt-4 flex items-end justify-between gap-3">
         <div>
           <h3 className="text-base font-semibold text-white">
