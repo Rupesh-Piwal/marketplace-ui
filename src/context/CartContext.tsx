@@ -14,6 +14,7 @@ interface CartContextType {
   credits: number;
   purchased: string[];
   isCartOpen: boolean;
+  setIsCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
   addToCart: (id: string) => void;
   removeFromCart: (name: string) => void;
   checkout: () => void;
@@ -84,6 +85,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         credits,
         purchased,
         isCartOpen,
+        setIsCartOpen,
         addToCart,
         removeFromCart,
         checkout,

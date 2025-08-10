@@ -1,5 +1,5 @@
 import "./App.css";
-import { CartProvider } from "./context/CartContext";
+import { CartProvider, useCart } from "./context/CartContext";
 import { CartToggle } from "./components/Cart/CartToggle";
 import { DesktopCartPanel } from "./components/Cart/DesktopCartPanel";
 import { MobileCartDrawer } from "./components/Cart/MobileCartDrawer";
@@ -7,6 +7,8 @@ import Marketplace from "./pages/Marketplace";
 import Header from "./components/Header";
 
 function App() {
+  const { cart, isCartOpen, setIsCartOpen } = useCart();
+
   return (
     <CartProvider>
       <div className="relative min-h-screen bg-[#121212] ">
@@ -15,7 +17,7 @@ function App() {
         <Marketplace />
 
         {/* Floating cart toggle button */}
-        <CartToggle />
+        <CartToggle count={cart.length} onClick={() => setIsCartOpen(true)} />
 
         {/* Desktop side cart */}
         <DesktopCartPanel />
