@@ -23,7 +23,7 @@ function App() {
         <DesktopCartPanel open={isCartOpen} setOpen={setIsCartOpen} />
 
         {/* Mobile drawer cart */}
-        <MobileCartDrawer />
+        <MobileCartDrawer open={isCartOpen} setOpen={setIsCartOpen} />
       </div>
     </CartProvider>
   );

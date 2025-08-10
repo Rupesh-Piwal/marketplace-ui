@@ -23,7 +23,7 @@ export const MobileCartDrawer = ({ open, setOpen }: Props) => {
           onClick={handleClose}
         />
       )}
-      
+
       {/* Drawer */}
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg p-4 transform transition-transform z-50 ${
@@ -32,19 +32,20 @@ export const MobileCartDrawer = ({ open, setOpen }: Props) => {
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Cart</h2>
-          <button 
-            onClick={handleClose} 
+          <button
+            onClick={handleClose}
             className="text-gray-500 hover:text-gray-700 text-xl"
             aria-label="Close cart"
           >
             ✖
           </button>
         </div>
-        
+
         <p className="mb-4 text-sm text-gray-600">
-          Credits: <span className="font-semibold">{credits.toLocaleString()}</span>
+          Credits:{" "}
+          <span className="font-semibold">{credits.toLocaleString()}</span>
         </p>
-        
+
         <div className="flex-1 overflow-auto max-h-96">
           {cart.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No items in cart</p>
@@ -76,7 +77,7 @@ export const MobileCartDrawer = ({ open, setOpen }: Props) => {
             </div>
           )}
         </div>
-        
+
         {cart.length > 0 && (
           <div className="mt-4 pt-4 border-t">
             <div className="flex justify-between items-center mb-3">
