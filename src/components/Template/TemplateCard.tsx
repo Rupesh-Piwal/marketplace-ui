@@ -51,6 +51,7 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
         <div className="pointer-events-none absolute inset-0 opacity-60 transition-opacity duration-300 group-hover:opacity-80">
           <div className="absolute -inset-24 bg-[radial-gradient(400px_200px_at_30%_0%,rgba(255,42,95,0.12),transparent_60%),radial-gradient(400px_200px_at_80%_100%,rgba(255,106,0,0.1),transparent_60%)]" />
         </div>
+
         <TemplatePreview type={template.preview} text={template.sampleText} />
       </div>
 
